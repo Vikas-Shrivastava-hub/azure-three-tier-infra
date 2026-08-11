@@ -1,0 +1,199 @@
+trigger: main
+
+pool: azure-infra-pool
+variables:
+ - name: dir
+   value: $(System.defaultWorkingDirectory)/environments
+
+stages:
+- stage: Terraform_Setup
+  displayName: Terraform Setup
+  jobs:
+  - job: setup_job
+    displayName: Install Terraform
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
+- stage: Validation
+  displayName: Terraform Validate
+  jobs:
+  - job: formatting
+    displayName: Terraform format
+    steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: 'terraform fmt -check -recursive'
+        workingDirectory: '$(dir)/dev'
+
+  - job: validate
+    displayName: Terraform Validate
+    dependsOn: formatting
+    steps:
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(dir)/dev'
+        commandOptions: '-backend=false'
+        backendServiceArm: 'azure-service-connection'
+        backendAzureRmStorageAccountName: 'strmono'
+        backendAzureRmContainerName: 'statefile'
+        backendAzureRmKey: 'mono.dev.statefile'
+      displayName: Terraform Init
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+        workingDirectory: '$(dir)/dev'
+      displayName: Terraform Validate
+
+- stage: Security_and_Quality_Scan
+  displayName: Security & Quality Scan
+  jobs:
+  - job: Quality_scan
+    displayName: Quality Scan(tflint)
+    steps:
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(dir)/dev'
+        commandOptions: '-backend=false'
+        backendServiceArm: 'azure-service-connection'
+        backendAzureRmStorageAccountName: 'strmono'
+        backendAzureRmContainerName: 'statefile'
+        backendAzureRmKey: 'mono.dev.statefile'
+      displayName: Terraform Init
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Invoke-WebRequest -Uri https://github.com/terraform-linters/tflint/releases/latest/download/tflint_windows_amd64.zip -OutFile tflint.zip
+          Expand-Archive tflint.zip -DestinationPath tflint
+           $env:Path += ";$(System.DefaultWorkingDirectory)/tflint"
+          tflint --version
+        workingDirectory: '$(dir)/dev'
+      displayName: Install Tflint
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          tflint  --init
+          tflint  --chdir .
+        workingDirectory: '$(dir)/dev'
+      displayName: Run Tflint
+
+  - job: Security_Scan
+    displayName: Security Scan (tfsec)
+    dependsOn: Quality_scan
+    steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Invoke-WebRequest -Uri https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-windows-amd64.exe
+          New-Item -ItemType Directory -Name tfsec -Force
+          Move-Item tfsec.exe tfsec/tfsec.exe
+          $env:Path += ";$(System.DefaultWorkingDirectory)/tfsec"
+          tfsec --version
+        workingDirectory: '$(dir)/dev'
+      displayName: Install Tfsec
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: 'tfsec .'
+        workingDirectory: '$(dir)/dev'
+      displayName: Run Tfsec
+  
+- stage: Deployment_Planning
+  displayName: Deployment Plan
+  jobs:
+  - job: Plan
+    displayName: Terraform Plan
+    steps:
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(dir)/dev'
+        backendServiceArm: 'azure-service-connection'
+        backendAzureRmStorageAccountName: 'strmono'
+        backendAzureRmContainerName: 'statefile'
+        backendAzureRmKey: 'mono.dev.statefile'
+      displayName: Terraform Init
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(dir)/dev'
+        environmentServiceNameAzureRM: 'azure-service-connection'
+    
+- stage: Cost_estimation
+  displayName: Cost Estimation
+  jobs:
+    - job: Cost
+      displayName: Cost Analysis
+      steps:
+      - task: InfracostSetup@2
+        inputs:
+          apiKey: '$(api-key)job'
+          version: '0.10.x'
+        displayName: Infracost Setup
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(dir)/dev'
+          commandOptions: '-backend=false'
+          backendServiceArm: 'azure-service-connection'
+          backendAzureRmStorageAccountName: 'strmono'
+          backendAzureRmContainerName: 'statefile'
+          backendAzureRmKey: 'mono.dev.statefile'
+        displayName: Terraform Init
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: 'infracost breakdown --path $(dir)/dev'
+          workingDirectory: '$(dir)/dev'
+        displayName: Run Infracost
+
+- stage: Manual_Approval
+  displayName: Manual Approval
+  jobs:
+  - job: approval
+    displayName: Manual Approval
+    pool: server
+    steps:
+    - task: ManualValidation@1
+      inputs:
+        notifyUsers: 'vikasshri2308@gamil.com'
+
+- stage: Infra_Deployment
+  displayName: Infra Deployment
+  jobs:
+  - job: Infra_deployment
+    displayName: Infra Deployment
+    steps:
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(dir)/dev'
+        backendServiceArm: 'azure-service-connection'
+        backendAzureRmStorageAccountName: 'strmono'
+        backendAzureRmContainerName: 'statefile'
+        backendAzureRmKey: 'mono.dev.statefile'
+      displayName: Terraform Init
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(dir)/dev'
+        environmentServiceNameAzureRM: 'azure-service-connection'
+      displayName: Deployment
+
+    
+    
