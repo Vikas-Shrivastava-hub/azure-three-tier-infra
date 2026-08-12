@@ -99,7 +99,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Invoke-WebRequest -Uri https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-windows-amd64.exe
+          Invoke-WebRequest -Uri https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-windows-amd64.exe -OutFile tfsec.exe
           New-Item -ItemType Directory -Name tfsec -Force
           Move-Item tfsec.exe tfsec/tfsec.exe
           $env:Path += ";$(System.DefaultWorkingDirectory)/tfsec"
