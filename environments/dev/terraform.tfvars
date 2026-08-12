@@ -91,87 +91,87 @@ nsg = {
     }
   }
 
-    nsg2 = {
-      name    = "mono-frontend-dev-nsg"
-      rg_name = "mono-dev-rg"
-      security_rule = {
-        rule1 = {
-          name                       = "Allow-HTTP"
-          priority                   = 100
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "*"
-          destination_port_range     = "80"
-          source_address_prefix      = "10.0.1.0/24"
-          destination_address_prefix = "*"
-        }
-
-        rule2 = {
-          name                       = "Allow-HTTPS"
-          priority                   = 200
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "*"
-          destination_port_range     = "443"
-          source_address_prefix      = "10.0.1.0/24"
-          destination_address_prefix = "*"
-        }
-        rule3 = {
-          name                       = "allow-bastion"
-          priority                   = 300
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "*"
-          destination_port_range     = "22"
-          source_address_prefix      = "10.0.4.0/24"
-          destination_address_prefix = "*"
-        }
+  nsg2 = {
+    name    = "mono-frontend-dev-nsg"
+    rg_name = "mono-dev-rg"
+    security_rule = {
+      rule1 = {
+        name                       = "Allow-HTTP"
+        priority                   = 100
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "80"
+        source_address_prefix      = "10.0.1.0/24"
+        destination_address_prefix = "*"
       }
-    }
-    nsg3 = {
-      name    = "mono-backend-dev-nsg"
-      rg_name = "mono-dev-rg"
-      security_rule = {
-        rule1 = {
-          name                       = "Allow-HTTP"
-          priority                   = 100
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "*"
-          destination_port_range     = "80"
-          source_address_prefix      = "10.0.2.0/24"
-          destination_address_prefix = "*"
-        }
-        rule2 = {
 
-          name                       = "allow-lb-probe"
-          priority                   = 110
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "*"
-          source_port_range          = "*"
-          destination_port_range     = "*"
-          source_address_prefix      = "AzureLoadBalancer"
-          destination_address_prefix = "*"
-        }
-        rule3 = {
-          name                       = "allow-bastion"
-          priority                   = 120
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "*"
-          destination_port_range     = "22"
-          source_address_prefix      = "10.0.4.0/24"
-          destination_address_prefix = "*"
-        }
+      rule2 = {
+        name                       = "Allow-HTTPS"
+        priority                   = 200
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "443"
+        source_address_prefix      = "10.0.1.0/24"
+        destination_address_prefix = "*"
+      }
+      rule3 = {
+        name                       = "allow-bastion"
+        priority                   = 300
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "22"
+        source_address_prefix      = "10.0.4.0/24"
+        destination_address_prefix = "*"
       }
     }
   }
+  nsg3 = {
+    name    = "mono-backend-dev-nsg"
+    rg_name = "mono-dev-rg"
+    security_rule = {
+      rule1 = {
+        name                       = "Allow-HTTP"
+        priority                   = 100
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "80"
+        source_address_prefix      = "10.0.2.0/24"
+        destination_address_prefix = "*"
+      }
+      rule2 = {
+
+        name                       = "allow-lb-probe"
+        priority                   = 110
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "*"
+        source_port_range          = "*"
+        destination_port_range     = "*"
+        source_address_prefix      = "AzureLoadBalancer"
+        destination_address_prefix = "*"
+      }
+      rule3 = {
+        name                       = "allow-bastion"
+        priority                   = 120
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "22"
+        source_address_prefix      = "10.0.4.0/24"
+        destination_address_prefix = "*"
+      }
+    }
+  }
+}
 
 nic = {
   nic1 = {
@@ -416,10 +416,10 @@ agw = {
 }
 agw_pool_association = {
   pool_association1 = {
-    ip_configuration_name   = "mono-frontend-dev-ipconfig"
-    nic_name                = "mono-frontend-dev-nic"
-    rg_name                 = "mono-dev-rg"
-    agw_name                = "mono-dev-agw"
-    backend_name            = "mono-dev-agw-backend-pool"
+    ip_configuration_name = "mono-frontend-dev-ipconfig"
+    nic_name              = "mono-frontend-dev-nic"
+    rg_name               = "mono-dev-rg"
+    agw_name              = "mono-dev-agw"
+    backend_name          = "mono-dev-agw-backend-pool"
   }
 }

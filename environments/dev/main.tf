@@ -23,14 +23,14 @@ module "nsg" {
   nsg        = var.nsg
 }
 module "nic" {
-  depends_on = [ module.subnet, module.nsg]
+  depends_on = [module.subnet, module.nsg]
   source     = "../../modules/nic"
   nic        = var.nic
 }
 module "vm" {
-    depends_on = [module.nic]
-    source = "../../modules/virtual_machine"
-    vm = var.vm
+  depends_on = [module.nic]
+  source     = "../../modules/virtual_machine"
+  vm         = var.vm
 }
 module "bastion" {
   depends_on = [module.subnet, module.pip]
@@ -43,8 +43,8 @@ module "lb" {
   lb         = var.lb
 }
 module "backend_pool_association" {
-  depends_on = [module.nic, module.lb]
-  source     = "../../modules/backend_pool_association"
+  depends_on       = [module.nic, module.lb]
+  source           = "../../modules/backend_pool_association"
   pool_association = var.pool_association
 }
 module "nsg_association" {
@@ -58,7 +58,7 @@ module "agw" {
   agw        = var.agw
 }
 module "application_pool_association" {
-  depends_on = [module.nic, module.agw]
-  source     = "../../modules/application_pool_association"
+  depends_on           = [module.nic, module.agw]
+  source               = "../../modules/application_pool_association"
   agw_pool_association = var.agw_pool_association
 }
