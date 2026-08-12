@@ -57,6 +57,7 @@ module "agw" {
   source     = "../../modules/application_gateway"
   agw        = var.agw
 }
+
 module "application_pool_association" {
   depends_on           = [module.nic, module.agw]
   source               = "../../modules/application_pool_association"
