@@ -144,7 +144,7 @@ stages:
       steps:
       - task: InfracostSetup@2
         inputs:
-          apiKey: '$(api-key)job'
+          apiKey: '$(api-key)'
           version: '0.10.x'
         displayName: Infracost Setup
       - task: TerraformTask@5
