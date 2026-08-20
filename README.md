@@ -21,7 +21,7 @@ I have created separate Terraform modules for different Azure resources instead 
 
 The modules folder contains reusable Terraform modules, while the environments folder contains environment-specific configurations. This allows the same modules to be reused for different environments without writing the same resource code again.
 
-
+```text
 azure-three-tier-infra/
 │
 ├── modules/
@@ -43,7 +43,7 @@ azure-three-tier-infra/
 ├── azure-Infra-pr-pipelines.yml
 ├── azure-pipelines.yml
 └── README.md
-
+```
 This structure makes the Terraform code easier to manage, reuse and maintain across multiple environments.
 
 ### CI/CD Pipeline
