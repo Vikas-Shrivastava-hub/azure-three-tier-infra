@@ -4,6 +4,9 @@ pr:
  branches:
    include:
      - main
+paths:
+    exclude:
+      - README.md
 
 pool: azure-infra-pool
 variables:

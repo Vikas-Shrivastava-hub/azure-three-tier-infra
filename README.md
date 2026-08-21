@@ -13,7 +13,7 @@ Azure Bastion is used to securely connect to the private VMs without assigning p
 
 ### High-Level Design
 
-![Azure Three-Tier Infrastructure HLD](./docs/azure-three-tier-hld.png)
+![Azure Three-Tier Infrastructure HLD](./azure-three-tier-hld.png)
 
 ### Terraform Structure
 
