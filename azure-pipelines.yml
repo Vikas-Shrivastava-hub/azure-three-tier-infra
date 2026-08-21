@@ -4,6 +4,9 @@ trigger:
       - main
 
 pr: none
+paths:
+    exclude:
+      - README.md
 
 pool: azure-infra-pool
 variables:
