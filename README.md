@@ -15,13 +15,13 @@ Azure Bastion is used to securely connect to the private VMs without assigning p
 
 ![Azure Three-Tier Infrastructure HLD](./azure-three-tier-hld.png)
 
-### Terraform Structure
+## Terraform Structure
 
 I have created separate Terraform modules for different Azure resources instead of writing all the resources in a single Terraform configuration.
 
-The modules folder contains reusable Terraform modules, while the environments folder contains environment-specific configurations. This allows the same modules to be reused for different environments without writing the same resource code again.
+The `modules` folder contains reusable Terraform modules, while the `environments` folder contains environment-specific configurations. This allows the same modules to be reused across different environments without duplicating the resource code.
 
-
+```text
 azure-three-tier-infra/
 │
 ├── modules/
@@ -40,11 +40,10 @@ azure-three-tier-infra/
 │   ├── qa/
 │   └── prod/
 │
-├── azure-Infra-pr-pipelines.yml
+├── azure-infra-pr-pipelines.yml
 ├── azure-pipelines.yml
 └── README.md
-
-This structure makes the Terraform code easier to manage, reuse and maintain across multiple environments.
+```
 
 ### CI/CD Pipeline
 
