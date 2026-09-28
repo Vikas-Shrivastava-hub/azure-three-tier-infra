@@ -99,7 +99,7 @@ Terraform Apply
 | Secure Access           | Azure Bastion                                                   |
 | Secrets Management      | Azure Key Vault                                                 |
 | Terraform State         | Azure Storage Account                                           |
-| Database                | Azure SQL Database                                              |
+| Database                | Azure PostgresSQL Database                                              |
 | Code Quality & Security | TFLint, tfsec                                                   |
 | Cost Estimation         | Infracost                                                       |
 
