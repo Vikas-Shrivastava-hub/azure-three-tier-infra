@@ -102,15 +102,7 @@ resource "azurerm_application_gateway" "agw" {
       backend_http_settings_name = request_routing_rule.value.backend_http_settings_name
     }
   }
-  dynamic "waf_configuration" {
-    for_each = each.value.waf_configuration != null ? [each.value.waf_configuration] : []
-    content {
-      enabled          = waf_configuration.value.enabled
-      firewall_mode    = waf_configuration.value.firewall_mode
-      rule_set_type    = lookup(waf_configuration.value, "rule_set_type", null)
-      rule_set_version = waf_configuration.value.rule_set_version
-    }
-  }
+  firewall_policy_id = var.firewall_policy_id
   dynamic "identity" {
     for_each = each.value.identity != null ? [each.value.identity] : []
     content {

@@ -306,12 +306,7 @@ variable "agw" {
       backend_address_pool_name  = string
       backend_http_settings_name = string
     }))
-    waf_configuration = optional(object({
-      enabled          = bool
-      firewall_mode    = string
-      rule_set_type    = optional(string)
-      rule_set_version = string
-    }))
+
     identity = optional(object({
       type = string
     }))
@@ -339,6 +334,22 @@ variable "role_assignment" {
     role_definition_name = string
   }))
 
+}
+variable "waf_policy" {
+  type = map(object({
+    name    = string
+    rg_name = string
+
+    policy_settings = object({
+      enabled = bool
+      mode    = string
+    })
+
+    managed_rule_set = object({
+      type    = string
+      version = string
+    })
+  }))
 }
 
 
