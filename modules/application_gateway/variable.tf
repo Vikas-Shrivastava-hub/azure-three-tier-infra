@@ -81,5 +81,12 @@ variable "agw" {
       rule_set_type    = optional(string)
       rule_set_version = string
     }))
+    identity = optional(object({
+      type         = string
+    }))
   }))
+}
+variable "identity_ids" {
+  type = string
+  default = null
 }

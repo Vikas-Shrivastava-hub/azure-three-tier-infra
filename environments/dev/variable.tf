@@ -312,6 +312,9 @@ variable "agw" {
       rule_set_type    = optional(string)
       rule_set_version = string
     }))
+    identity = optional(object({
+      type         = string
+    }))
   }))
 }
 variable "agw_pool_association" {
@@ -323,5 +326,20 @@ variable "agw_pool_association" {
     backend_name          = string
   }))
 }
+variable "identity" {
+  type = map(object({
+    name    = string
+    rg_name = string
+  }))
+}
+variable "role_assignment" {
+    type = map(object({
+      rg_name              = string
+      kv_name              = string
+      role_definition_name = string
+    }))
+  
+}
+
 
 

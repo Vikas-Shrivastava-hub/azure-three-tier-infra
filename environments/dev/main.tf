@@ -56,10 +56,22 @@ module "agw" {
   depends_on = [module.subnet, module.pip]
   source     = "../../modules/application_gateway"
   agw        = var.agw
+  identity_ids = module.identity.identity_id["identity1"]
 }
 
 module "application_pool_association" {
   depends_on           = [module.nic, module.agw]
   source               = "../../modules/application_pool_association"
   agw_pool_association = var.agw_pool_association
+}
+module "identity" {
+  depends_on = [module.rg]
+  source     = "../../modules/managed_identity"
+  identity   = var.identity
+}
+module "role_assignment" {
+  depends_on      = [module.identity, module.agw]
+  source          = "../../modules/role_assignment"
+  role_assignment = var.role_assignment
+  principal_id    = module.identity.identity_id["identity1"]
 }
