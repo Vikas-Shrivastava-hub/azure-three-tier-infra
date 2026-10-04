@@ -1,7 +1,7 @@
 rg = {
   rg1 = {
     name     = "mono-dev-rg"
-    location = "West US 3"
+    location = "centralindia"
   }
 }
 vnet = {
@@ -413,8 +413,8 @@ agw = {
       }
     }
     waf_configuration = {
-      enabled = true
-      firewall_mode = "Detection"
+      enabled          = true
+      firewall_mode    = "Detection"
       rule_set_version = "3.2"
     }
   }
@@ -426,5 +426,18 @@ agw_pool_association = {
     rg_name               = "mono-dev-rg"
     agw_name              = "mono-dev-agw"
     backend_name          = "mono-dev-agw-backend-pool"
+  }
+}
+identity = {
+  identity1 = {
+    name    = "mono-dev-agw-uami"
+    rg_name = "mono-dev-rg"
+  }
+}
+role_assignment = {
+  role1 = {
+    rg_name              = "mono-dev-rg"
+    kv_name              = "mono-shared-kv"
+    role_definition_name = "key Vault Secrets User"
   }
 }

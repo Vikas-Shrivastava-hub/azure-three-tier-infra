@@ -111,4 +111,11 @@ resource "azurerm_application_gateway" "agw" {
       rule_set_version = waf_configuration.value.rule_set_version
     }
   }
+  dynamic "identity" {
+    for_each = each.value.identity != null ? [each.value.identity] : []
+    content {
+      type         = identity.value.type
+      identity_ids = [var.identity_ids]
+    }
+  }
 }

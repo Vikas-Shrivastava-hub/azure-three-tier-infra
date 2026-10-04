@@ -2,11 +2,12 @@ trigger:
   branches:
     include:
       - main
-
+  paths:
+      exclude:
+        - README.md
+        
 pr: none
-paths:
-    exclude:
-      - README.md
+  
 
 pool: devops-pool
 variables:
