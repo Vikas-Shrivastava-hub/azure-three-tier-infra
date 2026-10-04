@@ -47,24 +47,24 @@ resource "azurerm_application_gateway" "agw" {
     content {
       name         = backend_address_pool.value.name
       fqdns        = lookup(backend_address_pool.value, "fqdns", null)
-      ip_addresses = lookup(backend_address_pool.value, "ip_addresses", null)  
+      ip_addresses = lookup(backend_address_pool.value, "ip_addresses", null)
     }
   }
   dynamic "probe" {
-  for_each = each.value.probe
+    for_each = each.value.probe
 
-  content {
-    name                                      = probe.value.name
-    protocol                                  = probe.value.protocol
-    path                                      = probe.value.path
-    interval                                  = probe.value.interval
-    timeout                                   = probe.value.timeout
-    unhealthy_threshold                       = probe.value.unhealthy_threshold
-    pick_host_name_from_backend_http_settings = lookup(probe.value, "pick_host_name_from_backend_http_settings", false)
-    host                                      = lookup(probe.value, "host", null)
+    content {
+      name                                      = probe.value.name
+      protocol                                  = probe.value.protocol
+      path                                      = probe.value.path
+      interval                                  = probe.value.interval
+      timeout                                   = probe.value.timeout
+      unhealthy_threshold                       = probe.value.unhealthy_threshold
+      pick_host_name_from_backend_http_settings = lookup(probe.value, "pick_host_name_from_backend_http_settings", false)
+      host                                      = lookup(probe.value, "host", null)
 
+    }
   }
-}
 
   dynamic "backend_http_settings" {
     for_each = each.value.backend_http_settings
@@ -100,6 +100,15 @@ resource "azurerm_application_gateway" "agw" {
       http_listener_name         = request_routing_rule.value.http_listener_name
       backend_address_pool_name  = request_routing_rule.value.backend_address_pool_name
       backend_http_settings_name = request_routing_rule.value.backend_http_settings_name
+    }
+  }
+  dynamic "waf_configuration" {
+    for_each = each.value.waf_configuration != null ? [each.value.waf_configuration] : []
+    content {
+      enabled          = waf_configuration.value.enabled
+      firewall_mode    = waf_configuration.value.firewall_mode
+      rule_set_type    = lookup(waf_configuration.value, "rule_set_type", null)
+      rule_set_version = waf_configuration.value.rule_set_version
     }
   }
 }

@@ -8,7 +8,7 @@ paths:
     exclude:
       - README.md
 
-pool: azure-infra-pool
+pool: devops-pool
 variables:
  - name: dir
    value: $(System.defaultWorkingDirectory)/environments
@@ -46,7 +46,7 @@ stages:
         command: 'init'
         workingDirectory: '$(dir)/dev'
         commandOptions: '-backend=false'
-        backendServiceArm: 'azure-service-connection'
+        backendServiceArm: 'Az-service-connection'
         backendAzureRmStorageAccountName: 'strmono'
         backendAzureRmContainerName: 'statefile'
         backendAzureRmKey: 'mono.dev.statefile'
@@ -69,7 +69,7 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(dir)/dev'
-        backendServiceArm: 'azure-service-connection'
+        backendServiceArm: 'Az-service-connection'
         backendAzureRmStorageAccountName: 'strmono'
         backendAzureRmContainerName: 'statefile'
         backendAzureRmKey: 'mono.dev.statefile'
@@ -79,7 +79,7 @@ stages:
         provider: 'azurerm'
         command: 'plan'
         workingDirectory: '$(dir)/dev'
-        environmentServiceNameAzureRM: 'azure-service-connection'
+        environmentServiceNameAzureRM: 'Az-service-connection'
 
 
 - stage: Manual_Approval
@@ -104,7 +104,7 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(dir)/dev'
-        backendServiceArm: 'azure-service-connection'
+        backendServiceArm: 'Az-service-connection'
         backendAzureRmStorageAccountName: 'strmono'
         backendAzureRmContainerName: 'statefile'
         backendAzureRmKey: 'mono.dev.statefile'
@@ -114,7 +114,7 @@ stages:
         provider: 'azurerm'
         command: 'apply'
         workingDirectory: '$(dir)/dev'
-        environmentServiceNameAzureRM: 'azure-service-connection'
+        environmentServiceNameAzureRM: 'Az-service-connection'
       displayName: Deployment
 
     

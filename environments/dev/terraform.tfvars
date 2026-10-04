@@ -205,7 +205,7 @@ vm = {
     name           = "mono-frontend-dev-vm"
     rg_name        = "mono-dev-rg"
     nic_name       = "mono-frontend-dev-nic"
-    vm_size        = "Standard_D2als_v7"
+    vm_size        = "Standard_D2als_v6"
     kv_rg_name     = "mono-dev-shared-rg"
     key_vault_name = "mono-shared-kv"
     secret_name    = "mono-frontend-dev-vm-secret"
@@ -234,7 +234,7 @@ vm = {
     name           = "mono-backend-dev-vm"
     rg_name        = "mono-dev-rg"
     nic_name       = "mono-backend-dev-nic"
-    vm_size        = "Standard_D2als_v7"
+    vm_size        = "Standard_D2als_v6"
     kv_rg_name     = "mono-dev-shared-rg"
     key_vault_name = "mono-shared-kv"
     secret_name    = "mono-backend-dev-vm-secret"
@@ -342,8 +342,8 @@ agw = {
 
 
     sku = {
-      name = "Standard_v2"
-      tier = "Standard_v2"
+      name = "WAF_v2"
+      tier = "WAF_v2"
     }
 
     autoscale_configuration = {
@@ -411,6 +411,11 @@ agw = {
         backend_address_pool_name  = "mono-dev-agw-backend-pool"
         backend_http_settings_name = "mono-dev-agw-backend-http-settings"
       }
+    }
+    waf_configuration = {
+      enabled = true
+      firewall_mode = "Detection"
+      rule_set_version = "3.2"
     }
   }
 }

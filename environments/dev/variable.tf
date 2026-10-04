@@ -21,9 +21,12 @@ variable "subnet" {
     rg_name          = string
     address_prefixes = list(string)
     delegation = optional(object({
-      name         = string
-      service_name = string
-      action       = optional(list(string))
+      name = string
+      service_delegation = object({
+        name   = string
+        action = optional(list(string))
+
+      })
     }))
     default_outbound_access_enabled = optional(bool)
     ip_address_pool = optional(object({
@@ -33,11 +36,11 @@ variable "subnet" {
     private_endpoint_network_policies             = optional(string)
     private_link_service_network_policies_enabled = optional(bool)
     sharing_scope                                 = optional(string)
-    service_endpoints                             = optional(list(string))
     service_endpoint_policy_ids                   = optional(list(string))
 
   }))
 }
+
 variable "pip" {
   type = map(object({
     name                    = string
@@ -302,6 +305,12 @@ variable "agw" {
       http_listener_name         = string
       backend_address_pool_name  = string
       backend_http_settings_name = string
+    }))
+    waf_configuration = optional(object({
+      enabled          = bool
+      firewall_mode    = string
+      rule_set_type    = optional(string)
+      rule_set_version = string
     }))
   }))
 }
