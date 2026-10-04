@@ -75,5 +75,11 @@ variable "agw" {
       backend_address_pool_name  = string
       backend_http_settings_name = string
     }))
+    waf_configuration = optional(object({
+      enabled          = bool
+      firewall_mode    = string
+      rule_set_type    = optional(string)
+      rule_set_version = string
+    }))
   }))
 }
