@@ -57,6 +57,7 @@ module "agw" {
   source       = "../../modules/application_gateway"
   agw          = var.agw
   identity_ids = module.identity.identity_id["identity1"]
+  firewall_policy_id = module.waf_policy.waf_policy_id["waf1"]
 }
 
 module "application_pool_association" {
@@ -74,4 +75,9 @@ module "role_assignment" {
   source          = "../../modules/role_assignment"
   role_assignment = var.role_assignment
   principal_id    = module.identity.identity_id["identity1"]
+}
+module "waf_policy" {
+  depends_on   = [module.rg]
+  source       = "../../modules/waf_policy"
+  waf_policy   = var.waf_policy
 }

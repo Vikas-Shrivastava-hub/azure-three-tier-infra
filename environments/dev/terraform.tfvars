@@ -412,11 +412,6 @@ agw = {
         backend_http_settings_name = "mono-dev-agw-backend-http-settings"
       }
     }
-    waf_configuration = {
-      enabled          = true
-      firewall_mode    = "Detection"
-      rule_set_version = "3.2"
-    }
   }
 }
 agw_pool_association = {
@@ -439,5 +434,21 @@ role_assignment = {
     rg_name              = "mono-dev-rg"
     kv_name              = "mono-shared-kv"
     role_definition_name = "key Vault Secrets User"
+  }
+}
+waf_policy = {
+  waf1 = {
+    name    = "mono-dev-waf-policy"
+    rg_name = "mono-dev-rg"
+
+    policy_settings = {
+      enabled = true
+      mode    = "Detection"
+    }
+
+    managed_rule_set = {
+      type    = "OWASP"
+      version = "3.2"
+    }
   }
 }
