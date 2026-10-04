@@ -17,7 +17,7 @@ variable "bastion" {
     shareable_link_enabled    = optional(bool)
     tunneling_enabled         = optional(bool)
     sku                       = optional(string)
-    virtual_id        = optional(string)
+    virtual_id                = optional(string)
     session_recording_enabled = optional(bool)
     tags                      = optional(map(string))
     zones                     = optional(list(string))

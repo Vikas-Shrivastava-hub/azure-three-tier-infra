@@ -53,9 +53,9 @@ module "nsg_association" {
   associate  = var.associate
 }
 module "agw" {
-  depends_on = [module.subnet, module.pip]
-  source     = "../../modules/application_gateway"
-  agw        = var.agw
+  depends_on   = [module.subnet, module.pip]
+  source       = "../../modules/application_gateway"
+  agw          = var.agw
   identity_ids = module.identity.identity_id["identity1"]
 }
 

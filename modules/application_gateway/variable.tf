@@ -82,11 +82,11 @@ variable "agw" {
       rule_set_version = string
     }))
     identity = optional(object({
-      type         = string
+      type = string
     }))
   }))
 }
 variable "identity_ids" {
-  type = string
+  type    = string
   default = null
 }

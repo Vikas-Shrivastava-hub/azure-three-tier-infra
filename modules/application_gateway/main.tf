@@ -114,7 +114,7 @@ resource "azurerm_application_gateway" "agw" {
   dynamic "identity" {
     for_each = each.value.identity != null ? [each.value.identity] : []
     content {
-      type = identity.value.type
+      type         = identity.value.type
       identity_ids = [var.identity_ids]
     }
   }

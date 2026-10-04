@@ -413,8 +413,8 @@ agw = {
       }
     }
     waf_configuration = {
-      enabled = true
-      firewall_mode = "Detection"
+      enabled          = true
+      firewall_mode    = "Detection"
       rule_set_version = "3.2"
     }
   }
