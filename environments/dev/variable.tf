@@ -337,8 +337,8 @@ variable "role_assignment" {
 }
 variable "waf_policy" {
   type = map(object({
-    name                = string
-    rg_name             = string
+    name    = string
+    rg_name = string
 
     policy_settings = object({
       enabled = bool
