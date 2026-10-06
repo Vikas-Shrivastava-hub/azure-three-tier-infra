@@ -24,23 +24,24 @@ module "nsg" {
 }
 module "nic" {
   depends_on = [module.subnet, module.nsg]
-  source     = "../../modules/nic"
-  nic        = var.nic
+  source = "../../modules/nic"
+  nic    = var.nic
 }
 module "vm" {
-  depends_on = [module.nic]
-  source     = "../../modules/virtual_machine"
-  vm         = var.vm
+  depends_on   = [module.nic]
+  source       = "../../modules/virtual_machine"
+  vm           = var.vm
+  identity_ids = [module.identity.identity_id["identity1"]]
 }
 module "bastion" {
   depends_on = [module.subnet, module.pip]
-  source     = "../../modules/bastion"
-  bastion    = var.bastion
+  source  = "../../modules/bastion"
+  bastion = var.bastion
 }
 module "lb" {
   depends_on = [module.subnet]
-  source     = "../../modules/load_balancer"
-  lb         = var.lb
+  source = "../../modules/load_balancer"
+  lb     = var.lb
 }
 module "backend_pool_association" {
   depends_on       = [module.nic, module.lb]
@@ -49,8 +50,8 @@ module "backend_pool_association" {
 }
 module "nsg_association" {
   depends_on = [module.nsg, module.subnet]
-  source     = "../../modules/nsg_association"
-  associate  = var.associate
+  source    = "../../modules/nsg_association"
+  associate = var.associate
 }
 module "agw" {
   depends_on         = [module.subnet, module.pip]
@@ -74,10 +75,29 @@ module "role_assignment" {
   depends_on      = [module.identity, module.agw]
   source          = "../../modules/role_assignment"
   role_assignment = var.role_assignment
-  principal_id    = module.identity.identity_id["identity1"]
+  principal_id    = module.identity.principal_id["identity1"]
 }
 module "waf_policy" {
   depends_on = [module.rg]
   source     = "../../modules/waf_policy"
   waf_policy = var.waf_policy
 }
+module "nat_gateway" {
+  depends_on  = [module.rg]
+  source      = "../../modules/nat_gateway"
+  nat_gateway = var.nat_gateway
+}
+module "nat_gateway_association" {
+  depends_on            = [module.pip]
+  source                = "../../modules/nat_gateway_association"
+  nat_gateway_associate = var.nat_gateway_associate
+  nat_gateway_id        = module.nat_gateway.nat_gateway_id["nat1"]
+}
+module "nat_gateway_associate_subnet" {
+  depends_on              = [module.nat_gateway_association, module.subnet]
+  source                  = "../../modules/nat_gateway_associate_subnet"
+  nat_gateway_association = var.nat_gateway_association
+  nat_gateway_id          = module.nat_gateway.nat_gateway_id["nat1"]
+}
+
+

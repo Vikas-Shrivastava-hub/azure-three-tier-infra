@@ -26,5 +26,11 @@ variable "vm" {
     os_profile_linux_config = object({
       disabled_password_authentication = bool
     })
+    identity = optional(object({
+      type = string
+    }))
   }))
+}
+variable "identity_ids" {
+  default = []
 }
