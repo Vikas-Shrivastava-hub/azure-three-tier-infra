@@ -48,6 +48,11 @@ pip = {
     rg_name           = "mono-dev-rg"
     allocation_method = "Static"
   }
+  pip3 = {
+    name              = "mono-dev-nat-pip"
+    rg_name           = "mono-dev-rg"
+    allocation_method = "Static"
+  }
 }
 nsg = {
   nsg1 = {
@@ -258,6 +263,9 @@ vm = {
     os_profile_linux_config = {
       disabled_password_authentication = false
     }
+    identity = {
+      type = "UserAssigned"
+    }
   }
 }
 bastion = {
@@ -297,7 +305,7 @@ lb = {
     frontend_ip_configuration_name = "mono-dev-ilb-frontend"
     rule_protocol                  = "Tcp"
     frontend_port                  = 80
-    backend_port                   = 80
+    backend_port                   = 8000
     probe_name                     = "mono-dev-ilb-probe"
     port                           = 80
   }
@@ -334,11 +342,14 @@ associate = {
 }
 agw = {
   agw1 = {
-    name              = "mono-dev-agw"
-    rg_name           = "mono-dev-rg"
-    subnet_name       = "apw-mono-snet-dev"
-    vnet_name         = "mono-dev-vnet"
-    public_ip_address = "mono-dev-pip"
+    name                 = "mono-dev-agw"
+    rg_name              = "mono-dev-rg"
+    ssl_certificate_name = "mono-dev-agw-tls"
+    kv_name              = "mono-shared-kv"
+    kv_rg_name           = "mono-dev-shared-rg"
+    subnet_name          = "apw-mono-snet-dev"
+    vnet_name            = "mono-dev-vnet"
+    public_ip_address    = "mono-dev-pip"
 
 
     sku = {
@@ -366,6 +377,10 @@ agw = {
       port1 = {
         name = "mono-dev-agw-frontend-port"
         port = 80
+      }
+      port2 = {
+        name = "mono-dev-agw-https-port"
+        port = 443
       }
     }
 
@@ -401,6 +416,19 @@ agw = {
         frontend_port_name             = "mono-dev-agw-frontend-port"
         protocol                       = "Http"
       }
+      listener2 = {
+        name                           = "mono-dev-agw-https-listener"
+        frontend_ip_configuration_name = "mono-dev-agw-frontend-ipconfig"
+        frontend_port_name             = "mono-dev-agw-https-port"
+        protocol                       = "Https"
+        ssl_certificate_name           = "mono-dev-agw-tls"
+      }
+    }
+    identity = {
+      type = "UserAssigned"
+    }
+    ssl_certificate = {
+      name = "mono-dev-agw-tls"
     }
     request_routing_rule = {
       rule1 = {
@@ -408,6 +436,14 @@ agw = {
         priority                   = 100
         rule_type                  = "Basic"
         http_listener_name         = "mono-dev-agw-http-listener"
+        backend_address_pool_name  = "mono-dev-agw-backend-pool"
+        backend_http_settings_name = "mono-dev-agw-backend-http-settings"
+      }
+      rule2 = {
+        name                       = "mono-dev-agw-https-routing-rule"
+        priority                   = 200
+        rule_type                  = "Basic"
+        http_listener_name         = "mono-dev-agw-https-listener"
         backend_address_pool_name  = "mono-dev-agw-backend-pool"
         backend_http_settings_name = "mono-dev-agw-backend-http-settings"
       }
@@ -431,9 +467,9 @@ identity = {
 }
 role_assignment = {
   role1 = {
-    rg_name              = "mono-dev-rg"
+    rg_name              = "mono-dev-shared-rg"
     kv_name              = "mono-shared-kv"
-    role_definition_name = "key Vault Secrets User"
+    role_definition_name = "Key Vault Secrets User"
   }
 }
 waf_policy = {
@@ -452,3 +488,30 @@ waf_policy = {
     }
   }
 }
+nat_gateway = {
+  nat1 = {
+    name                    = "mono-dev-nat-gateway"
+    rg_name                 = "mono-dev-rg"
+    sku_name                = "Standard"
+    idle_timeout_in_minutes = 4
+  }
+}
+nat_gateway_associate = {
+  nat_association1 = {
+    rg_name        = "mono-dev-rg"
+    public_ip_name = "mono-dev-nat-pip"
+  }
+}
+nat_gateway_association = {
+  nat_association1 = {
+    rg_name     = "mono-dev-rg"
+    subnet_name = "frontend-mono-snet-dev"
+    vnet_name   = "mono-dev-vnet"
+  }
+  nat_association2 = {
+    rg_name     = "mono-dev-rg"
+    subnet_name = "backend-mono-snet-dev"
+    vnet_name   = "mono-dev-vnet"
+  }
+}
+

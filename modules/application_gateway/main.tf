@@ -87,6 +87,7 @@ resource "azurerm_application_gateway" "agw" {
       frontend_ip_configuration_name = http_listener.value.frontend_ip_configuration_name
       frontend_port_name             = http_listener.value.frontend_port_name
       protocol                       = http_listener.value.protocol
+      ssl_certificate_name           = lookup(http_listener.value, "ssl_certificate_name", null)
     }
   }
 
@@ -108,6 +109,13 @@ resource "azurerm_application_gateway" "agw" {
     content {
       type         = identity.value.type
       identity_ids = [var.identity_ids]
+    }
+  }
+  dynamic "ssl_certificate" {
+    for_each = each.value.ssl_certificate != null ? [each.value.ssl_certificate] : []
+    content {
+      name                = ssl_certificate.value.name
+      key_vault_secret_id = data.azurerm_key_vault_secret.kv_secret[each.key].id
     }
   }
 }

@@ -1,10 +1,13 @@
 variable "agw" {
   type = map(object({
-    name              = string
-    rg_name           = string
-    subnet_name       = string
-    vnet_name         = string
-    public_ip_address = string
+    name                 = string
+    rg_name              = string
+    ssl_certificate_name = string
+    kv_name              = string
+    kv_rg_name           = string
+    subnet_name          = string
+    vnet_name            = string
+    public_ip_address    = string
 
 
 
@@ -65,6 +68,10 @@ variable "agw" {
       frontend_ip_configuration_name = string
       frontend_port_name             = string
       protocol                       = string
+      ssl_certificate_name           = optional(string)
+    }))
+    ssl_certificate = optional(object({
+      name = string
     }))
 
     request_routing_rule = map(object({

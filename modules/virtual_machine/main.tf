@@ -25,4 +25,12 @@ resource "azurerm_virtual_machine" "vm" {
   os_profile_linux_config {
     disable_password_authentication = each.value.os_profile_linux_config.disabled_password_authentication
   }
+  dynamic "identity" {
+    for_each = each.value.identity != null ? [each.value.identity] : []
+
+    content {
+      type         = identity.value.type
+      identity_ids = var.identity_ids
+    }
+  }
 }

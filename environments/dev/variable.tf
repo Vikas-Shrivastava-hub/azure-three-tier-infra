@@ -135,6 +135,9 @@ variable "vm" {
     os_profile_linux_config = object({
       disabled_password_authentication = bool
     })
+    identity = optional(object({
+      type = string
+    }))
   }))
 }
 
@@ -231,11 +234,14 @@ variable "associate" {
 }
 variable "agw" {
   type = map(object({
-    name              = string
-    rg_name           = string
-    subnet_name       = string
-    vnet_name         = string
-    public_ip_address = string
+    name                 = string
+    rg_name              = string
+    ssl_certificate_name = string
+    kv_name              = string
+    kv_rg_name           = string
+    subnet_name          = string
+    vnet_name            = string
+    public_ip_address    = string
 
 
 
@@ -296,6 +302,10 @@ variable "agw" {
       frontend_ip_configuration_name = string
       frontend_port_name             = string
       protocol                       = string
+      ssl_certificate_name           = optional(string)
+    }))
+    ssl_certificate = optional(object({
+      name = string
     }))
 
     request_routing_rule = map(object({
@@ -306,7 +316,6 @@ variable "agw" {
       backend_address_pool_name  = string
       backend_http_settings_name = string
     }))
-
     identity = optional(object({
       type = string
     }))
@@ -349,6 +358,28 @@ variable "waf_policy" {
       type    = string
       version = string
     })
+  }))
+}
+variable "nat_gateway" {
+  type = map(object({
+    name                    = string
+    rg_name                 = string
+    sku_name                = optional(string)
+    idle_timeout_in_minutes = optional(number)
+    zones                   = optional(list(string))
+  }))
+}
+variable "nat_gateway_associate" {
+  type = map(object({
+    rg_name        = string
+    public_ip_name = string
+  }))
+}
+variable "nat_gateway_association" {
+  type = map(object({
+    rg_name     = string
+    subnet_name = string
+    vnet_name   = string
   }))
 }
 
