@@ -471,11 +471,6 @@ role_assignment = {
     kv_name              = "mono-shared-kv"
     role_definition_name = "Key Vault Secrets User"
   }
-  role1 = {
-    rg_name              = "mono-dev-shared-rg"
-    kv_name              = "mono-shared-kv"
-    role_definition_name = "Key Vault Certificates User"
-  }
 }
 waf_policy = {
   waf1 = {
