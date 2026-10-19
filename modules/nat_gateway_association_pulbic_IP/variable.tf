@@ -1,4 +1,4 @@
-variable "nat_gateway_associate" {
+variable "nat_gateway_associate_public_ip" {
   type = map(object({
     rg_name        = string
     public_ip_name = string

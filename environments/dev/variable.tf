@@ -369,13 +369,13 @@ variable "nat_gateway" {
     zones                   = optional(list(string))
   }))
 }
-variable "nat_gateway_associate" {
+variable "nat_gateway_associate_public_ip" {
   type = map(object({
     rg_name        = string
     public_ip_name = string
   }))
 }
-variable "nat_gateway_association" {
+variable "nat_gateway_association_subnet" {
   type = map(object({
     rg_name     = string
     subnet_name = string

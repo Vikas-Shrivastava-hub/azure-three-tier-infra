@@ -1,4 +1,4 @@
-variable "nat_gateway_association" {
+variable "nat_gateway_association_subnet" {
   type = map(object({
     rg_name     = string
     subnet_name = string

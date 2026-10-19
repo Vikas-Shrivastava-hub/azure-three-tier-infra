@@ -174,6 +174,17 @@ nsg = {
         source_address_prefix      = "10.0.4.0/24"
         destination_address_prefix = "*"
       }
+      rule4 = {
+        name                       = "Allow-App-8000"
+        priority                   = 130
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "8000"
+        source_address_prefix      = "10.0.2.0/24"
+        destination_address_prefix = "*"
+      }
     }
   }
 }
@@ -496,13 +507,13 @@ nat_gateway = {
     idle_timeout_in_minutes = 4
   }
 }
-nat_gateway_associate = {
+nat_gateway_associate_public_ip = {
   nat_association1 = {
     rg_name        = "mono-dev-rg"
     public_ip_name = "mono-dev-nat-pip"
   }
 }
-nat_gateway_association = {
+nat_gateway_association_subnet = {
   nat_association1 = {
     rg_name     = "mono-dev-rg"
     subnet_name = "frontend-mono-snet-dev"

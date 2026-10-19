@@ -23,7 +23,7 @@ module "nsg" {
   nsg        = var.nsg
 }
 module "nic" {
-  depends_on = [module.subnet, module.nsg]
+  depends_on = [module.subnet]
   source     = "../../modules/nic"
   nic        = var.nic
 }
@@ -54,7 +54,7 @@ module "nsg_association" {
   associate  = var.associate
 }
 module "agw" {
-  depends_on         = [module.subnet, module.pip]
+  depends_on         = [module.subnet, module.pip, module.role_assignment]
   source             = "../../modules/application_gateway"
   agw                = var.agw
   identity_ids       = module.identity.identity_id["identity1"]
@@ -72,7 +72,7 @@ module "identity" {
   identity   = var.identity
 }
 module "role_assignment" {
-  depends_on      = [module.identity, module.agw]
+  depends_on      = [module.identity]
   source          = "../../modules/role_assignment"
   role_assignment = var.role_assignment
   principal_id    = module.identity.principal_id["identity1"]
@@ -87,17 +87,17 @@ module "nat_gateway" {
   source      = "../../modules/nat_gateway"
   nat_gateway = var.nat_gateway
 }
-module "nat_gateway_association" {
-  depends_on            = [module.pip]
-  source                = "../../modules/nat_gateway_association"
-  nat_gateway_associate = var.nat_gateway_associate
-  nat_gateway_id        = module.nat_gateway.nat_gateway_id["nat1"]
+module "nat_gateway_association_public_ip" {
+  depends_on                      = [module.pip]
+  source                          = "../../modules/nat_gateway_association_pulbic_IP"
+  nat_gateway_associate_public_ip = var.nat_gateway_associate_public_ip
+  nat_gateway_id                  = module.nat_gateway.nat_gateway_id["nat1"]
 }
 module "nat_gateway_associate_subnet" {
-  depends_on              = [module.nat_gateway_association, module.subnet]
-  source                  = "../../modules/nat_gateway_associate_subnet"
-  nat_gateway_association = var.nat_gateway_association
-  nat_gateway_id          = module.nat_gateway.nat_gateway_id["nat1"]
+  depends_on                     = [module.nat_gateway_association_public_ip, module.subnet]
+  source                         = "../../modules/nat_gateway_associate_subnet"
+  nat_gateway_association_subnet = var.nat_gateway_association_subnet
+  nat_gateway_id                 = module.nat_gateway.nat_gateway_id["nat1"]
 }
 
 
