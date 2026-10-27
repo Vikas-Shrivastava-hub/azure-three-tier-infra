@@ -4,6 +4,9 @@ pr:
  branches:
    include:
      - main
+ paths:
+    exclude:
+      - azure-Infra-pr-pipelines.yml
 
 pool: devops-pool
 
@@ -106,7 +109,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            Invoke-WebRequest -Uri https://github.com/aquasecurity/trivy/releases/v0.76.1/download/trivy_0.76.1_windows-64bit.zip -OutFile trivy.zip
+            Invoke-WebRequest -Uri https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_windows-64bit.zip -OutFile trivy.zip
             Expand-Archive trivy.zip -DestinationPath trivy
             $env:Path += ";$(System.DefaultWorkingDirectory)/trivy"
             trivy --version
