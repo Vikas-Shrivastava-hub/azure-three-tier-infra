@@ -5,6 +5,7 @@ trigger:
   paths:
       exclude:
         - README.md
+        - azure-Infra-pr-pipelines.yml
         
 pr: none
   
