@@ -54,7 +54,7 @@ module "nsg_association" {
   associate  = var.associate
 }
 module "agw" {
-  depends_on         = [module.subnet, module.pip]
+  depends_on         = [module.subnet, module.pip, module.role_assignment]
   source             = "../../modules/application_gateway"
   agw                = var.agw
   identity_ids       = module.identity.identity_id["identity1"]
@@ -72,7 +72,7 @@ module "identity" {
   identity   = var.identity
 }
 module "role_assignment" {
-  depends_on      = [module.identity, module.agw]
+  depends_on      = [module.identity]
   source          = "../../modules/role_assignment"
   role_assignment = var.role_assignment
   principal_id    = module.identity.principal_id["identity1"]
